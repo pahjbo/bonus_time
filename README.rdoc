@@ -1,0 +1,3 @@
+= Bonus Time For Redmine
+
+This is a plugin which dramatically enhances the usability of time tracking and reporting in Redmine.

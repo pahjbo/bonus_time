@@ -1,0 +1,34 @@
+<h2>Timesheet</h2>
+
+<div id="calendar-wrapper">
+	<div id="filter-wrapper">
+		<%= render :partial => 'filter' %>
+	</div>
+	<div id="calendar"></div>
+	<div id="summary-wrapper">
+		<%= render :partial => 'summary' %>
+	</div>
+</div>
+
+<div id="time-day-wrapper">
+	<div id="log-form-wrapper">
+		<%= render :partial => 'log_time' %>
+	</div>
+	<div id="time-day">
+	  <%= render :partial => 'day' %>
+	</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+	bonus_time.render_month(<%= raw @month_entries.to_json %>);
+});
+</script>
+
+<% content_for :header_tags do %>
+  <%= stylesheet_link_tag 'fullcalendar', :plugin => 'bonus_time' %>
+  <%= stylesheet_link_tag 'fullcalendar.print.css', :plugin => 'bonus_time' %>
+  <%= stylesheet_link_tag 'bonus_time', :plugin => 'bonus_time' %>
+  <%= javascript_include_tag 'fullcalendar.min.js', :plugin => 'bonus_time' %>
+  <%= javascript_include_tag('bonus_time', :plugin => 'bonus_time') %>
+<% end %>

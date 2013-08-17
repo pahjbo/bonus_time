@@ -1,0 +1,19 @@
+<fieldset id="filter-wrapper">
+	<legend>Filter Time Entries</legend>
+	<%= form_tag({:controller => "timesheet", :action => "filter"}, :method => "get", :remote => true) do %>
+		<%= hidden_field_tag('date', Date.today) %>
+		<%= label_tag(:filter_project, "Project:") %>
+		<%= select_tag('filter[project]', grouped_options_for_select(@project_list, @project ? @project.id : '')) %>
+		<% if @user_list.length > 0 %>
+			<%= label_tag(:filter_user, "User:") %>
+			<%= select_tag(
+				'filter[user]',
+				options_for_select(
+					[['(All Users)', 'all']] + @user_list.collect {|p| [ p.name, p.id ] },
+					:selected => @all_users ? 'all' : @user.id
+				)
+			) %>
+			<!-- <%= collection_select(:filter, :user, @user_list, :id, :name, ) %> -->
+		<% end %>
+	<% end %>
+</fieldset>

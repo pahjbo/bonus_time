@@ -1,0 +1,54 @@
+<% if @can_log_time %>
+  <div id="log-form" class="clearfix">
+    <%= form_for(@time_entry, :url => @time_log_action, :remote => true) do |entry_form| %>
+      <h3>
+        <% if not @is_edit %>
+          Log Time for <%= @user.name %>
+        <% else %>
+          Edit Log for <%= @time_entry.user.name %>
+        <% end %>
+        on <span id="date-for"><%= @today.to_s :long  %></span>
+      </h3>
+      <div class="row">
+        <%= entry_form.hidden_field :spent_on, :value => @today %>
+        <% if @project != nil %>
+          <%= entry_form.hidden_field :project_id %>
+          <%= hidden_field_tag 'filter[project]', @project.id %>
+        <% end %>
+        <% if @all_users || @user.id != User.current.id %>
+          <%= hidden_field_tag 'filter[user]', @all_users ? 'all' : @user.id, :id => 'log_filter_user' %>
+        <% end %>
+        <p class="float">
+          <%= entry_form.label :hours, "Hours" %>
+          <%= entry_form.text_field :hours, :size => 20 %>
+        </p>
+        <p class="float">
+          <%= entry_form.label :issue_id, "Issue" %>
+          <%= entry_form.text_field :issue_id, :size => 20 %>
+        </p>
+        <p class="float">
+          <%= entry_form.label :project_id, "Project" %>
+          <%= collection_select( :time_entry, :project_id, Project.all(:order => 'name', :conditions => {:status => 1}).select{|project| @user.allowed_to?(:log_time, project)}, :id, :name, {}, {:disabled => @project != nil}) %>
+        </p>
+        <p class="float">
+          <%= entry_form.label :activity_id, "Activity" %>
+          <%= collection_select(:time_entry, :activity_id, Enumeration.all(:order => 'name', :conditions => {:type => 'TimeEntryActivity'}), :id, :name) %>
+        </p>
+      </div>
+      <div class="row">
+        <p>
+          <%= entry_form.label :comments, "Comments" %>
+          <%= entry_form.text_area :comments, :size => '60x2' %>
+        </p>
+      </div>
+      <div class="row">
+        <% if not @is_edit %>
+          <%= submit_tag "Log time" %>
+        <% else %>
+          <%= submit_tag "Save changes" %>
+          <%= button_tag 'Cancel', :type => 'reset' %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

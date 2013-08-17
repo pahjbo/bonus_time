@@ -1,0 +1,253 @@
+#calendar-wrapper {
+	float: left;
+	width: 45%;
+	min-width: 400px;
+	margin-right: 5%;
+}
+
+#calendar-wrapper #filter-wrapper {
+	margin: 0 0 25px 0;
+}
+
+#time-day-wrapper {
+	float: right;
+	width: 50%;
+}
+
+#time-day {
+	margin-top: 10px;
+}
+
+#time-day h3 {
+	font-weight: normal;
+	font-size: 20px;
+}
+
+#time-day .project h4 {
+	font-weight: bold;
+	font-size: 14px;
+	padding: 2px;
+	margin: 10px 0 2px 0;
+}
+
+#time-day .entry h5 {
+	margin: 10px 0 2px 0;
+	padding: 0;	
+}
+
+#time-day .entry {
+	padding: 5px;
+	border: solid 1px #516b49;
+	background: #f7fff4;
+	box-shadow: #ddd 3px 3px 3px;
+	margin: 0 0 8px 0;
+	z-index: 9999;
+}
+
+#time-day .entry.draggable {
+	cursor: move;
+}
+
+#time-day .entry h5 span {
+	font-weight: bold;
+	background: #516b49;
+	color: #fff;
+	margin-left: -5px;
+	font-size: 12px;
+	padding: 2px 5px;
+}
+
+#time-day .entry h5 span a {
+	color: #f7fff4;
+}
+
+#time-day .entry p {
+	margin: 0 0 0 20px;
+	padding: 2px 0;
+	font-size: 11px;
+}
+
+#time-day .entry p.options {
+	float: right;
+}
+
+#calendar h2 {
+	font-size: 13px;
+	margin: 0;
+	padding: 10px 0;
+	color: #000;
+	background: #fff;
+}
+
+#calendar .fc-event {
+	border: solid 1px #ccc;
+	text-align: center;
+	background: #fafafa !important;
+}
+
+#calendar .fc-day.hours-lte10,
+#calendar .fc-day.hours-lte9,
+#calendar .fc-day.hours-lte8 {
+	background: #a8ff89 !important;
+}
+
+#calendar .fc-day {
+	cursor: pointer;
+}
+
+#calendar .fc-day.hours-lte7,
+#calendar .fc-day.hours-lte6,
+#calendar .fc-day.hours-lte5,
+#calendar .fc-day.hours-lte4 {
+	background: #F6F68A !important;
+}
+
+#calendar .fc-day.hours-lte3,
+#calendar .fc-day.hours-lte2,
+#calendar .fc-day.hours-lte1 {
+	background: #EAC251 !important;
+}
+
+#calendar .fc-day.hours-0 {
+	background: #EBA982 !important;
+}
+
+#calendar .fc-day.fc-other-month {
+	background: #ccc;
+}
+
+#calendar .fc-day.fc-sun,
+#calendar .fc-day.fc-sat {
+	background: #fff !important;
+}
+
+#calendar .fc-day.fc-sat.hours-lte1,
+#calendar .fc-day.fc-sun.hours-lte1,
+#calendar .fc-day.fc-sat.hours-lte2,
+#calendar .fc-day.fc-sun.hours-lte2,
+#calendar .fc-day.fc-sat.hours-lte3,
+#calendar .fc-day.fc-sun.hours-lte3,
+#calendar .fc-day.fc-sat.hours-lte4,
+#calendar .fc-day.fc-sun.hours-lte4,
+#calendar .fc-day.fc-sat.hours-lte5,
+#calendar .fc-day.fc-sun.hours-lte5,
+#calendar .fc-day.fc-sat.hours-lte6,
+#calendar .fc-day.fc-sun.hours-lte6,
+#calendar .fc-day.fc-sat.hours-lte7,
+#calendar .fc-day.fc-sun.hours-lte7,
+#calendar .fc-day.fc-sat.hours-lte8,
+#calendar .fc-day.fc-sun.hours-lte8,
+#calendar .fc-day.fc-sat.hours-lte9,
+#calendar .fc-day.fc-sun.hours-lte9,
+#calendar .fc-day.fc-sat.hours-lte10,
+#calendar .fc-day.fc-sun.hours-lte10 {
+	background: #a8ff89 !important;
+}
+
+#calendar .fc-day.active {
+	outline: solid 1px #777;
+}
+
+#calendar .fc-day:hover {
+	outline: solid 1px #999;
+}
+
+#log-form {
+	background: #fafafa;
+	border: solid 1px #efefef;
+	padding: 6px;
+}
+
+#log-form label {
+	display: block;
+	margin-bottom: 2px;
+}
+
+#log-form .row {
+	clear: both;
+}
+
+#log-form .row p {
+	margin: 5px 0;
+	padding: 0;
+}
+
+#log-form .row p.float {
+	float: left;
+	margin-right: 10px;
+	height: 42px;
+}
+
+#log-form #time_entry_comments {
+	width: 90%;
+}
+
+button {
+	vertical-align: middle;
+	margin-top: 1px;
+	margin-bottom: 1px;
+}
+
+.drop-helper {
+	background: #fff;
+	border: solid 1px #444;
+	padding: 8px;
+	max-width: 80px;
+}
+
+h2.user-name {
+	background: transparent;
+	margin: 0 0 0 0;
+	padding: 10px 0;
+	font-size: 18px;
+	font-weight: normal;
+	color: #000;
+}
+
+.collapsed-entries .entry {
+	display: none;
+}
+
+#summary h4 {
+	font-size: 14px;
+	font-weight: bold;
+	color: #444;
+	padding: 10px 0;
+	margin: 0;
+}
+
+#summary table, #summary h4 {
+	width: 100%;
+	min-width: 200px;
+}
+
+#summary table {
+	margin-bottom: 25px;
+}
+
+#summary table th {
+	text-align: left;
+}
+
+#summary table th {
+	border-bottom: solid 1px #aaa;
+	margin: 0;
+	padding: 2px;
+}
+
+#summary table td {
+	padding: 2px;
+	margin: 0;
+}
+
+#summary table td {
+	width: 25%;
+}
+
+#summary table td:first-child {
+	width: 50%;
+}
+
+#summary table tr:nth-child(2n) td {
+	background: #efefef;
+}

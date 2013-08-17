@@ -1,0 +1,23 @@
+<div id="summary">
+	<h4>Total Hours: <%= @total_hours %></h4>
+	<% if @all_users %>
+		<h4>Team Summary</h4>
+		<table cellspacing="0" cellpadding="0">
+			<thead><tr><th>Team Member</th><th>Hours</th><th>% of Total</th></tr></thead>
+			<tbody>
+				<% @user_summary.sort.map do |user, hours| %>
+					<tr><td><%= user %></td><td><%= hours[0] %></td><td><%= hours[1] %>%</td></tr>
+				<% end %>
+			</tbody>
+		</table>
+	<% end %>
+	<h4>Project Summary</h4>
+	<table cellspacing="0" cellpadding="0">
+		<thead><tr><th>Project</th><th>Hours</th><th>% of Total</th></tr></thead>
+		<tbody>
+			<% @project_summary.sort.map do |project, hours| %>
+				<tr><td><%= project %></td><td><%= hours[0] %></td><td><%= hours[1] %>%</td></tr>
+			<% end %>
+		</tbody>
+	</table>
+</div>

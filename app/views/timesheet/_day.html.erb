@@ -1,0 +1,43 @@
+<% if @day_users.length > 0 %>
+	<h3>
+		<%= @user.name + ':' if @user.id != User.current.id %>
+		Time spent on <%= @today.to_s :long  %>
+	</h3>
+<% end %>
+<% @day_users.each do |_,time_user| %>
+	<% if @all_users %>
+		<h2 class="user-name"><%= time_user[:user].name %> (<%= time_user[:hours].round 2 %> hours)</h2>
+	<% end %>
+	<% time_user[:projects].each do |name, details| %>
+		<div class="<%= 'collapsed-entries' if @all_users %>">
+			<h4>
+				<a class="expand-entries" data-project="project-<%= details[:project_id] %>-<%= time_user[:user].id %>" href="#">
+					<%= details[:hours].round 2 %> hours for <%= name %>
+					<% if @all_users %>(<%= details[:issues].length %> entries)<% end %>
+				</a>
+			</h4>
+			<% details[:issues].each do |entry| %>
+				<div class="entry<%= ' draggable' if User.current.admin? || (User.current.id == entry.user_id) %> project-<%= details[:project_id] %>-<%= time_user[:user].id %>" data-entryid="<%= entry.id %>">
+					<% if User.current.admin? || (User.current == @user && !@all_users) %>
+						<p class="options">
+							<%= self.timesheet_edit_link entry.id %>
+							<%= self.timesheet_delete_link entry.id %>
+						</p>
+					<% end %>
+					<h5><span>
+						<%= entry.hours.round 2 %> <%= entry.activity.name %> hours
+						<% if entry.issue %>
+							on <%= link_to "##{entry.issue.id.to_s}", :controller => :issues, :action => :show, :id => entry.issue.id %>
+						<% end %>
+					 </span></h5>
+					<% if entry.comments? %>
+						<p class="comments"><%= entry.comments %></p>
+					<% end %>
+					<% if entry.issue %>
+						<p><%= link_to "##{entry.issue.id.to_s} #{entry.issue.subject}", :controller => :issues, :action => :show, :id => entry.issue.id %></p>
+					<% end %>
+				</div>
+			<% end %>
+		</div>
+	<% end %>
+<% end %>
