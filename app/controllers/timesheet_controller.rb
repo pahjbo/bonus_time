@@ -183,10 +183,10 @@ private
     Rails.cache.fetch('bonus_time_users_who_can_log') do
       roles = Role.select('id').where(['permissions LIKE ?', '%:log_time%']).all.map(&:id)
       # then find users that have those roles on any project
-      User.select('DISTINCT users.id, users.*')
-        .joins('INNER JOIN members ON members.user_id = users.id')
-        .joins('INNER JOIN member_roles ON member_roles.member_id = members.id')
-        .where("member_roles.role_id IN (?)", roles)
+      User.select('DISTINCT users.id, users.*') \
+        .joins('INNER JOIN members ON members.user_id = users.id') \
+        .joins('INNER JOIN member_roles ON member_roles.member_id = members.id') \
+        .where("member_roles.role_id IN (?)", roles) \
         .order("users.lastname, users.firstname")
     end
   end
@@ -253,9 +253,9 @@ private
       _project_list = Project.all({:order => 'name'})
       project_hash = {'my' => [], 'other' => [], 'inactive' => []}
     else
-      _project_list = Project.select('projects.*')
-        .joins('INNER JOIN members ON members.project_id = projects.id')
-        .where("members.user_id = ?", User.current.id)
+      _project_list = Project.select('projects.*') \
+        .joins('INNER JOIN members ON members.project_id = projects.id') \
+        .where("members.user_id = ?", User.current.id) \
         .order("projects.name")
       project_hash = {'my' => []}
     end
