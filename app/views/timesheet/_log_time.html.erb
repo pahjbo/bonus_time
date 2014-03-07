@@ -20,11 +20,7 @@
         <% end %>
         <p class="float">
           <%= entry_form.label :hours, "Hours" %>
-          <%= entry_form.text_field :hours, :size => 20 %>
-        </p>
-        <p class="float">
-          <%= entry_form.label :issue_id, "Issue" %>
-          <%= entry_form.text_field :issue_id, :size => 20 %>
+          <%= entry_form.text_field :hours, :size => 6 %>
         </p>
         <p class="float">
           <%= entry_form.label :project_id, "Project" %>
@@ -33,6 +29,12 @@
         <p class="float">
           <%= entry_form.label :activity_id, "Activity" %>
           <%= collection_select(:time_entry, :activity_id, Enumeration.all(:order => 'name', :conditions => {:type => 'TimeEntryActivity'}), :id, :name) %>
+        </p>
+      </div>
+      <div class="row issue-search">
+        <p>
+          <%= entry_form.label :issue_id, "Issue" %>
+          <%= entry_form.text_field :issue_id, :size => 60 %>
         </p>
       </div>
       <div class="row">
