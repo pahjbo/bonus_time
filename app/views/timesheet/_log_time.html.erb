@@ -36,6 +36,14 @@
           <%= entry_form.label :issue_id, "Issue" %>
           <%= entry_form.text_field :issue_id, :size => 60 %>
         </p>
+        <%= render( :partial => 'trackable_issues' ) %>
+        <h4 class="help-toggle"><a href="#">Help</a></h4>
+        <ul class="trackable-issue-help">
+          <li>Start typing part of an issue title in the text box to autocomplete.</li>
+          <li>Your issues are listed first, ordered by most recently updated. Then everybody else's issues, ordered by most recently updated.</li>
+          <li>You can shift-click on an issue to open it in a new tab.</li>
+          <li>You can also type an issue number directly. This is the only way to log time to a closed ticket.</li>
+        </ul>
       </div>
       <div class="row">
         <p>

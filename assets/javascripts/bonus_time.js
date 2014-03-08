@@ -68,7 +68,9 @@ bonus_time.filter_data = function(http_data) {
   if ($('#filter_user').length) {
     http_data['filter[user]'] = $('#filter_user').val();
   }
-  http_data['filter[project]'] = $('#filter_project').val();
+  if (!http_data['filter[project]']) {
+    http_data['filter[project]'] = $('#filter_project').val();
+  }
   return $.param(http_data);
 }
 
@@ -104,6 +106,35 @@ bonus_time.init_draggable = function() {
   });
 }
 
+bonus_time.get_trackable_issues = function() {
+  $.ajax('/timesheet/trackable_issues', {
+    data: bonus_time.filter_data({'filter[project]': $('#time_entry_project_id').val()})
+  });
+}
+
+bonus_time.init_issue_selector = function() {
+  bonus_time.get_trackable_issues();
+  var prev_val = '';
+  $('#time_entry_issue_id').keyup(function(e) {
+    var $issues = $('#trackable_issues a');
+    var val = $(this).val().trim();
+    if (val == prev_val) return;
+    prev_val = val;
+    $('#trackable_issues a.selected').removeClass('selected');
+    if (val.length) {
+      var match = val.toLowerCase();
+      $issues.each(function() {
+        if ($(this).html().toLowerCase().indexOf(match) !== -1) $(this).parent().show();
+        else $(this).parent().hide();
+      });
+    } else {
+      $issues.each(function() {
+        $(this).parent().show();
+      });
+    }
+  });
+}
+
 $(document).ready(function() {
   if ($('#calendar').length > 0) {
     bonus_time.cal = $('#calendar');
@@ -119,6 +150,50 @@ $(document).ready(function() {
     bonus_time.active_date = bonus_time.cal.fullCalendar('getDate');
   }
   bonus_time.init_draggable();
+  bonus_time.init_issue_selector();
+
+  $('#time_entry_issue_id').on('blur', function() {
+    $(this).val($(this).val().replace(/\D/g, ''));
+  });
+
+  $('#time_entry_issue_id').on('keydown', function(e) {
+    var $issues = $('#trackable_issues a:visible');
+    var $selected = $('#trackable_issues a.selected');
+    var $parent = $('#trackable_issues');
+
+    if (e.keyCode == 40) { // down
+      e.preventDefault();
+      if ($selected.length) {
+        $selected.removeClass('selected');
+        $selected.parent().nextAll(':visible').first().find('a').addClass('selected');
+      } else {
+        $issues.first().addClass('selected');
+      }
+      if ($('#trackable_issues a.selected').length) {
+        $parent.scrollTop($parent.scrollTop() + $('#trackable_issues a.selected').position().top);
+      }
+    } else if (e.keyCode == 38) { // up
+      e.preventDefault();
+      $selected.removeClass('selected');
+      if ($selected.length) {
+        $selected.parent().prevAll(':visible').first().find('a').addClass('selected');
+      } else {
+        $issues.last().addClass('selected');
+      }
+      if ($('#trackable_issues a.selected').length) {
+        $parent.scrollTop($parent.scrollTop() + $('#trackable_issues a.selected').position().top);
+      }
+    } else if (e.keyCode == 27) { // esc
+      e.preventDefault();
+      $(this).val('').trigger('keyup');
+      $(this).focus();
+    } else if (e.keyCode == 13) { // enter
+      if ($selected.length) {
+        e.preventDefault();
+        $('#time_entry_issue_id').val($selected.data('issue-id'));
+      }
+    }
+  });
 });
 
 $(document).on('click', '.expand-entries', function(e) {
@@ -132,11 +207,25 @@ $(document).on('click', 'button[type=reset]', function() {
   });
 });
 
+$(document).on('click', 'h4.help-toggle a', function(e) {
+  e.preventDefault();
+  $('.trackable-issue-help').toggle();
+});
+
 $(document).on('click', '.fc-day', function() {
   $('.fc-day').removeClass('active');
   $(this).addClass('active');
 });
 
+$(document).on('click', '#trackable_issues a', function(e) {
+  if (!e.shiftKey) {
+    e.preventDefault();
+    $('#time_entry_issue_id').val($(this).data('issue-id'));
+  }
+});
+
 $(document).on('change', '#filter-wrapper select', bonus_time.filter_change);
+
+$(document).on('change', '#time_entry_project_id', bonus_time.get_trackable_issues);
 
 })(jQuery);

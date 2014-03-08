@@ -252,6 +252,60 @@ h2.user-name {
 	background: #efefef;
 }
 
-.issue-search {
-	
+.issue-finder {
+	height: 70px;
+	overflow: scroll;
+	background: #fff;
+	border: solid 1px #d7d7d7;
+	padding: 5px;
+	margin: 5px 15px 15px 2px;
+	position: relative;
+}
+
+.issue-finder ul {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+.issue-finder ul li {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+.issue-finder ul li a {
+	display: block;
+}
+
+.issue-finder ul li:nth-child(even) a {
+	background-color: #fafafa;
+}
+
+.issue-finder ul li a:hover,
+.issue-finder ul li a.selected {
+	background-color: #169;
+	color: #fff;
+	text-decoration: none;
+}
+
+.issue-search h4 {
+	margin: 0;
+	padding: 0;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+h4.help-toggle {
+	text-align: right;
+	font-weight: normal;
+	margin-right: 15px;
+}
+
+.trackable-issue-help {
+	display: none;
+	background: #fff;
+	border: solid 1px #d7d7d7;
+	padding: 20px 20px 20px 30px;
+	margin-right: 15px;
 }

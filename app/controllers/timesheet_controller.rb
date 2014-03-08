@@ -35,6 +35,22 @@ class TimesheetController < ApplicationController
     render 'refresh_all'
   end
 
+  def trackable_issues
+    build_filters
+    if @project
+      @trackable_issues = Issue.joins(:status) \
+        .where('issues.assigned_to_id = ?', @user.id) \
+        .where('issues.project_id = ?', @project.id) \
+        .where('issue_statuses.is_closed <> 1') \
+        .order('issues.updated_on DESC')
+      @other_trackable_issues = Issue.joins(:status) \
+        .where('issues.assigned_to_id <> ?', @user.id) \
+        .where('issues.project_id = ?', @project.id) \
+        .where('issue_statuses.is_closed <> 1') \
+        .order('issues.updated_on DESC')    
+    end
+  end
+
   # submit time form
   def log_time
     @today = params[:time_entry][:spent_on].to_date
@@ -230,6 +246,8 @@ private
   end
 
   def build_filters
+    @trackable_issues = []
+    @other_trackable_issues = []
     # if a project is selected, only show those who are assigned
     if @project && (User.current.admin? || User.current.allowed_to?(:view_time_entries, @project))
       _member_list = Member.all({

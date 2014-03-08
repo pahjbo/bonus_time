@@ -1,0 +1,18 @@
+<div id="trackable_issues" class="row issue-finder">
+  <% if @trackable_issues.length > 0 %>
+    <h4>Your Issues</h4>
+    <ul>
+      <% @trackable_issues.each do |issue| %>
+        <li><a data-issue-id="<%= issue.id %>" href="/issues/<%= issue.id %>" target="_blank">#<%= issue.id %> <%= issue.subject %></a></li>
+      <% end %>
+    </ul>
+  <% end %>
+  <% if @other_trackable_issues.length > 0 %>
+    <h4>Everyone else's Issues</h4>
+    <ul>
+      <% @other_trackable_issues.each do |issue| %>
+        <li><a data-issue-id="<%= issue.id %>" href="/issues/<%= issue.id %>" target="_blank">#<%= issue.id %> <%= issue.subject %></a></li>
+      <% end %>
+    </ul>
+  <% end %>
+</div>
