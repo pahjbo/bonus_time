@@ -3,5 +3,4 @@ $('#log-form-wrapper').html("<%= escape_javascript( render( :partial => 'log_tim
 $('#summary-wrapper').html("<%= escape_javascript( render( :partial => 'summary' )) -%>");
 $('#filter-wrapper').html("<%= escape_javascript( render( :partial => 'filter' )) -%>");
 bonus_time.render_month(<%= raw @month_entries.to_json %>);
-bonus_time.init_draggable();
-bonus_time.init_issue_selector();
+bonus_time.init();

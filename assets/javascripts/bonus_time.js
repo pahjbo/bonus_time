@@ -135,6 +135,56 @@ bonus_time.init_issue_selector = function() {
   });
 }
 
+bonus_time.issue_blur = function() {
+  $(this).val($(this).val().replace(/\D/g, ''));
+}
+
+bonus_time.issue_keydown = function(e) {
+  var $issues = $('#trackable_issues a:visible');
+  var $selected = $('#trackable_issues a.selected');
+  var $parent = $('#trackable_issues');
+
+  if (e.keyCode == 40) { // down
+    e.preventDefault();
+    if ($selected.length) {
+      $selected.removeClass('selected');
+      $selected.parent().nextAll(':visible').first().find('a').addClass('selected');
+    } else {
+      $issues.first().addClass('selected');
+    }
+    if ($('#trackable_issues a.selected').length) {
+      $parent.scrollTop($parent.scrollTop() + $('#trackable_issues a.selected').position().top);
+    }
+  } else if (e.keyCode == 38) { // up
+    e.preventDefault();
+    $selected.removeClass('selected');
+    if ($selected.length) {
+      $selected.parent().prevAll(':visible').first().find('a').addClass('selected');
+    } else {
+      $issues.last().addClass('selected');
+    }
+    if ($('#trackable_issues a.selected').length) {
+      $parent.scrollTop($parent.scrollTop() + $('#trackable_issues a.selected').position().top);
+    }
+  } else if (e.keyCode == 27) { // esc
+    e.preventDefault();
+    $(this).val('').trigger('keyup');
+    $(this).focus();
+  } else if (e.keyCode == 13) { // enter
+    if ($selected.length) {
+      e.preventDefault();
+      $('#time_entry_issue_id').val($selected.data('issue-id'));
+    }
+  }
+}
+
+bonus_time.init = function() {
+  bonus_time.init_draggable();
+  bonus_time.init_issue_selector();
+  $('#time_entry_issue_id').on('blur', bonus_time.issue_blur);
+  $('#time_entry_issue_id').on('keydown', bonus_time.issue_keydown);
+}
+
 $(document).ready(function() {
   if ($('#calendar').length > 0) {
     bonus_time.cal = $('#calendar');
@@ -149,51 +199,8 @@ $(document).ready(function() {
     });
     bonus_time.active_date = bonus_time.cal.fullCalendar('getDate');
   }
-  bonus_time.init_draggable();
-  bonus_time.init_issue_selector();
 
-  $('#time_entry_issue_id').on('blur', function() {
-    $(this).val($(this).val().replace(/\D/g, ''));
-  });
-
-  $('#time_entry_issue_id').on('keydown', function(e) {
-    var $issues = $('#trackable_issues a:visible');
-    var $selected = $('#trackable_issues a.selected');
-    var $parent = $('#trackable_issues');
-
-    if (e.keyCode == 40) { // down
-      e.preventDefault();
-      if ($selected.length) {
-        $selected.removeClass('selected');
-        $selected.parent().nextAll(':visible').first().find('a').addClass('selected');
-      } else {
-        $issues.first().addClass('selected');
-      }
-      if ($('#trackable_issues a.selected').length) {
-        $parent.scrollTop($parent.scrollTop() + $('#trackable_issues a.selected').position().top);
-      }
-    } else if (e.keyCode == 38) { // up
-      e.preventDefault();
-      $selected.removeClass('selected');
-      if ($selected.length) {
-        $selected.parent().prevAll(':visible').first().find('a').addClass('selected');
-      } else {
-        $issues.last().addClass('selected');
-      }
-      if ($('#trackable_issues a.selected').length) {
-        $parent.scrollTop($parent.scrollTop() + $('#trackable_issues a.selected').position().top);
-      }
-    } else if (e.keyCode == 27) { // esc
-      e.preventDefault();
-      $(this).val('').trigger('keyup');
-      $(this).focus();
-    } else if (e.keyCode == 13) { // enter
-      if ($selected.length) {
-        e.preventDefault();
-        $('#time_entry_issue_id').val($selected.data('issue-id'));
-      }
-    }
-  });
+  bonus_time.init();  
 });
 
 $(document).on('click', '.expand-entries', function(e) {

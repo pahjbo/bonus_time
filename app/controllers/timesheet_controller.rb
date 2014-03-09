@@ -63,7 +63,6 @@ class TimesheetController < ApplicationController
     time_entry_to_save.safe_attributes = params[:time_entry]
     call_hook(:controller_timelog_edit_before_save, { :params => params, :time_entry => @time_entry })
     time_entry_to_save.save
-    puts YAML::dump(time_entry_to_save)
     entries_by_date
     month_time
     build_filters
@@ -246,8 +245,6 @@ private
   end
 
   def build_filters
-    @trackable_issues = []
-    @other_trackable_issues = []
     # if a project is selected, only show those who are assigned
     if @project && (User.current.admin? || User.current.allowed_to?(:view_time_entries, @project))
       _member_list = Member.all({
