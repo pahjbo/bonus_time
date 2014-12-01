@@ -178,7 +178,7 @@ private
     @month_entries.each{ |key,num| @month_entries[key] = num.round(2) }
     @project_summary.each{ |key,num| @project_summary[key] = [num.round(2), ((num / @total_hours) * 100).round(1)] }
     @user_summary.each{ |key,num| @user_summary[key] = [num.round(2), ((num / @total_hours) * 100).round(1)] }
-    @total_hours = @total_hours.round(2)
+    @total_hours = (@total_hours * 100).round / 100.0
   end
 
   def my_account_or_admin
