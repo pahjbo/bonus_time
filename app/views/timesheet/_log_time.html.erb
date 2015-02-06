@@ -28,7 +28,7 @@
         </p>
         <p class="float">
           <%= entry_form.label :activity_id, "Activity" %>
-          <%= collection_select(:time_entry, :activity_id, Enumeration.all(:order => 'name', :conditions => {:type => 'TimeEntryActivity'}), :id, :name) %>
+          <%= collection_select(:time_entry, :activity_id, TimeEntryActivity.shared.active, :id, :name) %>
         </p>
       </div>
       <div class="row issue-search">
