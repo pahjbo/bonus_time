@@ -91,6 +91,18 @@ bonus_time.redmine_date = function(date) {
   return date.getFullYear() + '-' + month + '-' + date.getDate();
 }
 
+bonus_time.check_numeric_hours = function(e) {
+  var $input = $('#time_entry_hours');
+  var hours = parseFloat($input.val());
+  if (NaN == hours || 0 == hours) {
+    $input.val('');
+    alert('Please enter a valid number of hours');
+    e.preventDefault();
+    return false;
+  }
+  $input.val(hours);
+}
+
 bonus_time.init_draggable = function() {
   $('.entry.draggable').draggable({
     scope: 'eventdate',
@@ -234,5 +246,7 @@ $(document).on('click', '#trackable_issues a', function(e) {
 $(document).on('change', '#filter-wrapper select', bonus_time.filter_change);
 
 $(document).on('change', '#time_entry_project_id', bonus_time.get_trackable_issues);
+
+$(document).on('submit', '#new_time_entry', bonus_time.check_numeric_hours);
 
 })(jQuery);
