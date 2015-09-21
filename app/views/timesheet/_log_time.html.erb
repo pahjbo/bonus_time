@@ -24,7 +24,7 @@
         </p>
         <p class="float">
           <%= entry_form.label :project_id, "Project" %>
-          <%= collection_select( :time_entry, :project_id, Project.all(:order => 'name', :conditions => {:status => 1}).select{|project| @user.allowed_to?(:log_time, project)}, :id, :name, {}, {:disabled => @project != nil}) %>
+          <%= collection_select( :time_entry, :project_id, Project.order('name').where(status: 1).all().select{|project| @user.allowed_to?(:log_time, project)}, :id, :name, {}, {:disabled => @project != nil}) %>
         </p>
         <p class="float">
           <%= entry_form.label :activity_id, "Activity" %>

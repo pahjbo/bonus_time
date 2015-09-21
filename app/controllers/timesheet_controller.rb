@@ -1,5 +1,4 @@
 class TimesheetController < ApplicationController
-  unloadable
 
   # figure out what objects we're looking at
   before_filter :apply_filters
@@ -104,17 +103,19 @@ class TimesheetController < ApplicationController
 
 private
   def entries_by_date
-    scope = TimeEntry.visible
+    scope = TimeEntry.visible.where(:spent_on => @today)
+    
+    unless @all_users
+      scope = scope.where(:user_id => @user.id) 
+    end
+    
+    if @project
+      scope = scope.where(:project_id => @project.id)
+    end
+
+    scope = scope.joins(:project, :activity, :user).includes(issue: :tracker).order("users.lastname, users.firstname, projects.name, spent_on")
     @day_users = {}
-    query_filters = {
-      :include => [:project, :activity, :user, {:issue => :tracker}],
-      :conditions => {:spent_on => @today},
-      :order => ['users.lastname', 'users.firstname', 'projects.name', :spent_on]
-    }
-    query_filters[:conditions][:project_id] = @project.id if @project
-    query_filters[:conditions][:user_id] = @user.id unless @all_users
-    day_entries = scope.all(query_filters)
-    day_entries.each do |entry|
+    scope.all().each do |entry|
       if not @day_users[entry.user.name]
         @day_users[entry.user.name] = {:projects => {}, :user => entry.user, :hours => 0}
       end
@@ -127,7 +128,7 @@ private
     end
     if not @time_entry
       @time_entry = TimeEntry.new
-      last_time_entry = TimeEntry.first( :conditions => { :user_id => @user.id }, :order => 'updated_on DESC' )
+      last_time_entry = TimeEntry.where(user_id: @user.id).order('updated_on DESC').first()
       if last_time_entry
         if @project
           @time_entry.project_id = @project.id
@@ -152,20 +153,16 @@ private
       start_date = @today
       end_date = start_date + num_days.days
     end
-    scope = TimeEntry.visible.spent_between(start_date, end_date)
-    query_filters = {
-      :include => [:project, :activity, :user, {:issue => :tracker}],
-      :order => :spent_on,
-      :conditions => {}
-    }
-    query_filters[:conditions][:user_id] = @user.id unless @all_users
-    query_filters[:conditions][:project_id] = @project.id if @project
-    all_entries = scope.all(query_filters)
+    scope = TimeEntry.visible.where(:spent_on => start_date..end_date)
+    scope = scope.order('spent_on').includes(:project, :activity, :user, {:issue => :tracker})
+    scope = scope.where(:user_id => @user.id) unless @all_users
+    scope = scope.where(:project_id => @project.id) if @project
+
     @month_entries = {}
     @user_summary = {}
     @project_summary = {}
     @total_hours = 0;
-    all_entries.each do |entry|
+    scope.all().each do |entry|
       @month_entries[entry.spent_on] ||= 0
       @project_summary[entry.project.name] ||= 0
       @user_summary[entry.user.name] ||= 0
@@ -247,11 +244,7 @@ private
   def build_filters
     # if a project is selected, only show those who are assigned
     if @project && (User.current.admin? || User.current.allowed_to?(:view_time_entries, @project))
-      _member_list = Member.all({
-        :include => [:project, :user],
-        :conditions => {:project_id => @project.id},
-        :order => ['users.lastname', 'users.firstname']
-      })
+      _member_list = Member.joins(:project, :user).where(:project_id => @project.id).order('users.lastname, users.firstname').all()
       @user_list = []
       _member_list.each do |member|
         @user_list << member.user if member.user and member.user.allowed_to?(:log_time, @project)
@@ -266,13 +259,10 @@ private
 
     # build project list
     if User.current.admin?
-      _project_list = Project.all({:order => 'name'})
+      _project_list = Project.order('name').all()
       project_hash = {'my' => [], 'other' => [], 'inactive' => []}
     else
-      _project_list = Project.select('projects.*') \
-        .joins('INNER JOIN members ON members.project_id = projects.id') \
-        .where("members.user_id = ?", User.current.id) \
-        .order("projects.name")
+      _project_list = Project.visible(User.current)
       project_hash = {'my' => []}
     end
     _project_list.each do |project|
