@@ -18,7 +18,7 @@
 			</h4>
 			<% details[:issues].each do |entry| %>
 				<div class="entry<%= ' draggable' if User.current.admin? || (User.current.id == entry.user_id) %> project-<%= details[:project_id] %>-<%= time_user[:user].id %>" data-entryid="<%= entry.id %>">
-					<% if User.current.admin? || (User.current == @user && !@all_users) %>
+					<% if entry.editable_by?(User.current) %>
 						<p class="options">
 							<%= self.timesheet_edit_link entry.id %>
 							<%= self.timesheet_delete_link entry.id %>

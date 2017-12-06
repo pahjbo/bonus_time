@@ -8,7 +8,7 @@ class TimesheetController < ApplicationController
 
   def index
     build_filters
-  	month_time
+    	month_time
     entries_by_date
   end
 
@@ -136,12 +136,13 @@ private
           @time_entry.project_id = last_time_entry.project_id
         end
         @time_entry.activity_id = last_time_entry.activity_id
-      end
+      end 
     end
     if not @time_log_action
       @time_log_action = { :controller => 'timesheet', :action => "log_time", :time_entry_id => nil }
     end
-    @can_log_time = users_who_can_log_time().include?(User.current) && (!@all_users || @is_edit) && (User.current.admin? || User.current.id == @user.id)
+    #this has become rather complicated - perhaps better to refactor to separate concerns in views...
+    @can_log_time =  users_who_can_log_time().include?(User.current) # || ( (@is_edit &&  (User.current.allowed_to?(:edit_time_entries, @project) || ( User.current.id == @user.id && User.current.allowed_to?(:edit_own_time_entries, @project))))|| ( User.current.allowed_to?(:log_time, @project) ))
   end
 
   def month_time(num_days=nil)
@@ -252,7 +253,7 @@ private
       @user_list = users_who_can_log_time()
     # otherwise, hide the dropdown
     else
-      @user_list = []
+      @user_list = [User.current]
     end
 
     # build project list
