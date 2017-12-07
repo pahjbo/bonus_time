@@ -253,8 +253,9 @@ h2.user-name {
 }
 
 .issue-finder {
-	height: 70px;
+	height: 90px;
 	overflow: scroll;
+	resize: vertical;
 	background: #fff;
 	border: solid 1px #d7d7d7;
 	padding: 5px;
